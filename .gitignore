@@ -1,0 +1,9 @@
+/app/config
+/app/private
+/public/anomalie
+/public/ispezioni
+/public/progetti-docs
+/public/.htaccess
+/PHPMailer
+/fpdf
+/TCPDF
