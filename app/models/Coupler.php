@@ -31,6 +31,21 @@
 
                return $result;
           }
+
+           
+          public function getCouplersByIdInspection($id){
+               $this->db->query("SELECT * FROM couplers
+                                   INNER JOIN ultrasoundinspection ON idUltrasoundInspection = couplers.fk_idUltraSound
+                                   WHERE fk_idInspection=:id");
+
+                                   
+               $this->db->bind(':id', $id); 
+
+               $result = $this->db->resultSet();
+
+               return $result;
+          }
+          
           
           public function getCouplerById($id){
                $this->db->query("SELECT * FROM couplers

@@ -47,7 +47,7 @@
                               $couplerOptions = ['water', 'gel'];
                               $dimensionOptions = ['10', '12.5', '20', '25', 'PA 16 elements', 'PA 64 elements', 'other'];
                               $frequencyOptions = ['0.5', '1', '2.25', '3.5', '5'];
-                              $detailOptions = ['single cristal', 'phased array', 'cdelay line', 'zoccolo est.', 'probe'];
+                              $detailOptions = ['single cristal', 'phased array', 'delay line', 'external plinth', 'roller probe'];
 
                               function generateCheckboxes($name, $options, $checkedOptions) {
                               foreach ($options as $option) {

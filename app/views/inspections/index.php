@@ -185,7 +185,11 @@
                                                                            foreach($data["components"] as $component){
                                                                  ?>
                                                                       <tr>
-                                                                           <th scope="row"><?php echo $component->componentIstance; ?></th> 
+                                                                           <th scope="row">
+                                                                                <a href="<?php echo URLROOT; ?>/inspectioncomponents/index?idInspection=<?php echo $_GET["id"];  ?>&idComponent=<?php echo $component->fk_idComponentIstance; ?>">
+                                                                                     <?php echo $component->componentIstance; ?>
+                                                                                </a>
+                                                                           </th> 
                                                                            <td>
                                                                                 <a href="<?php echo URLROOT; ?>/inspectioncomponents/deleteComponent?id=<?php echo $component->idInspectionComponent; ?>">
                                                                                      <i class="bi bi-trash-fill"></i>
@@ -386,7 +390,7 @@
                                                        <br>
                                                        <b>Specific procedure: </b> <?php echo $data["inspection"]->specificProcedure;?> 
                                                        <br> 
-                                                       <b>Accessibility criteria: </b> <?php echo $data["inspection"]->accessibility;?> 
+                                                       <b>Acceptability criteria criteria: </b> <?php echo $data["inspection"]->accessibility;?> 
                                                        <br> 
                                                        <b>Techniques: </b> 
                                                        <?php 

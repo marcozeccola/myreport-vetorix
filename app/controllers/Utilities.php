@@ -28,7 +28,7 @@ class Utilities extends Controller {
 
             $this->view('utilities/getPrivateFile', $data);
         }else{ 
-            header('location: ' . URLROOT . "/progetti/");
+            header('location: ' . URLROOT . "/folders/");
         }
     }
   

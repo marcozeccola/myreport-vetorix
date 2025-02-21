@@ -20,20 +20,20 @@
                               <label class="form-label" ><b>Type</b></label>
                               <div class="form-check">
                                    <label class="form-check-label" for="cantiere">
-                                        <input class="form-check-input" value="cantiere" type="checkbox" name="positions[]" id="cantiere"  <?php foreach($data["positions"] as $position){ if($position->structurePosition  == "cantiere") echo "checked"; }?>    >
-                                        Cantiere
+                                        <input class="form-check-input" value="worksite" type="checkbox" name="positions[]" id="cantiere"  <?php foreach($data["positions"] as $position){ if($position->structurePosition  == "cantiere") echo "checked"; }?>    >
+                                        worksite
                                    </label>
                               </div>
                               <div class="form-check">
                                    <label class="form-check-label" for="terra">
-                                        <input class="form-check-input" value="terra"  type="checkbox" name="positions[]" id="terra" <?php foreach($data["positions"] as $position){ if($position->structurePosition  == "terra") echo "checked"; }?>  >
-                                        A terra
+                                        <input class="form-check-input" value="ground"  type="checkbox" name="positions[]" id="terra" <?php foreach($data["positions"] as $position){ if($position->structurePosition  == "terra") echo "checked"; }?>  >
+                                        On the ground
                                    </label>
                               </div>
                               <div class="form-check">
                                    <label class="form-check-label" for="acqua">
-                                        <input class="form-check-input"  value="acqua" type="checkbox" name="positions[]" id="acqua"  <?php foreach($data["positions"] as $position){ if($position->structurePosition  == "acqua") echo "checked"; }?>  >
-                                        In acqua
+                                        <input class="form-check-input"  value="water" type="checkbox" name="positions[]" id="acqua"  <?php foreach($data["positions"] as $position){ if($position->structurePosition  == "acqua") echo "checked"; }?>  >
+                                        Water
                                    </label>
                               </div>
                          </div> 

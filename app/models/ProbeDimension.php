@@ -31,6 +31,19 @@
 
                return $result;
           }
+
+          public function getProbeDimensionsByIdInspection($id){
+               $this->db->query("SELECT * FROM probedimensions
+                                   INNER JOIN ultrasoundinspection ON idUltrasoundInspection = probedimensions.fk_idUltraSound
+                                   WHERE fk_idInspection=:id");
+
+                                   
+               $this->db->bind(':id', $id); 
+
+               $result = $this->db->resultSet();  
+
+               return $result;
+          }
           
           public function getIdProbeDimensionById($id){
                $this->db->query("SELECT * FROM probedimensions

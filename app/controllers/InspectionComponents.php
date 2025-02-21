@@ -9,6 +9,7 @@ class InspectionComponents extends Controller {
      var $componentIstancesModel;
      var $inspectionsModel;
      var $inspectionComponentsModel;
+     var $postItModel;
 
 
      public function __construct() { 
@@ -25,10 +26,36 @@ class InspectionComponents extends Controller {
           $this->inspectionsModel = $this->model('Inspection');  
           $this->inspectionUsersModel = $this->model('InspectionUser');  
           $this->inspectionComponentsModel = $this->model('InspectionComponent');
+          $this->foldersModel = $this->model('Folder'); 
+          $this->postItModel = $this->model('Postit');  
      }
 
- 
- 
+
+     public function index(){
+
+          if(!isset($_GET["idComponent"]) && !isset($_GET["idInspection"])){ 
+               header("location:".URLROOT."/folders");
+          } 
+
+          $component = $this->componentIstancesModel->getComponentIstanceById($_GET["idComponent"]);
+          $inspection =$this->inspectionsModel->getInspectionById($_GET["idInspection"]);     
+          $modelIstance = $this->modelIstancesModel->getModelIstanceById($inspection->fk_idModelIstance);
+          $model = $this->modelsModel->getModelById($modelIstance->fk_idModel);
+          $postIt = $this->postItModel->getPositsByIdComponent($_GET["idComponent"]);
+
+          $data = [  
+               'inspection'=>$inspection, 
+               'component'=>$component,
+               'modelIstance'=>$modelIstance,
+               'model'=>$model,
+               'tree'=>$this->foldersModel->getAllFolderTree($model->fk_idFolder), 
+               'postIt'=>$postIt
+          ];
+  
+          $this->view('inspectionComponents/index', $data);
+     }
+
+
      public function addInspectionComponent(){
            $data=[];
            if($_SERVER['REQUEST_METHOD'] == 'POST' 
@@ -148,6 +175,9 @@ class InspectionComponents extends Controller {
                $this->view('inspectionComponents/editNotes', $data);
           }
      }
+
+    
+
      
      public function deleteComponent(){
           if(isset($_GET["id"])){   

@@ -21,8 +21,8 @@
                               <label class="form-label" ><b>Type</b></label>
                               <div class="form-check">
                                    <label class="form-check-label" for="infusione">
-                                        <input class="form-check-input" value="infusione" type="checkbox" name="tecs[]" id="infusione"  <?php foreach($data["tecs"] as $tec){ if($tec->technique  == "infusione") echo "checked"; }?>    >
-                                        Infusione
+                                        <input class="form-check-input" value="infusion" type="checkbox" name="tecs[]" id="infusione"  <?php foreach($data["tecs"] as $tec){ if($tec->technique  == "infusione") echo "checked"; }?>    >
+                                        Infusion
                                    </label>
                               </div>
                               <div class="form-check">

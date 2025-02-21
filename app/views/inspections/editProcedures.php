@@ -21,7 +21,7 @@
                          </div>
 
                          <div class="form-outline mb-4">
-                              <label class="form-label" for="accessibility"><b>Accessibility criteria</b></label>
+                              <label class="form-label" for="accessibility"><b>Acceptability criteria</b></label>
                               <input type="text" id="accessibility" name="accessibility" class="form-control" value="<?php echo $data["inspection"]->accessibility; ?>" />
                          </div>
 

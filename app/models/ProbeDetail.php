@@ -31,7 +31,20 @@
 
                return $result;
           }
-          
+
+
+          public function getProbeDetailsByIdInspection($id){
+               $this->db->query("SELECT * FROM probedetails
+                                   INNER JOIN ultrasoundinspection ON idUltrasoundInspection = probedetails.fk_idUltraSound
+                                   WHERE fk_idInspection=:id");
+
+                                   
+               $this->db->bind(':id', $id); 
+
+               $result = $this->db->resultSet();  
+
+               return $result;
+          }          
           public function getIdProbeDetailById($id){
                $this->db->query("SELECT * FROM probedetails
                                    WHERE idProbeDetail =:id");
@@ -42,6 +55,7 @@
 
                return $result;
           }
+ 
  
           public function deleteProbeDetailById($id){
                $this->db->query("DELETE FROM probedetails WHERE idProbeDetail = :id");
