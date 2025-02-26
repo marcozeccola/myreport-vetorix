@@ -204,6 +204,41 @@
                }
           }
           
+          
+          public function reviewInspection($id){
+               $this->db->query("UPDATE inspections 
+                        SET   isReviewed = :isReviewed 
+                               WHERE idInspection = :id;");
+ 
+               $this->db->bind(':isReviewed', true);  
+               $this->db->bind(':id', $id);  
+          
+
+               if ($this->db->execute()) {
+                    return true;
+               } else {
+                    return false;
+               }
+          }
+
+          
+          
+          public function unreviewInspection($id){
+               $this->db->query("UPDATE inspections 
+                        SET   isReviewed = :isReviewed 
+                               WHERE idInspection = :id;");
+ 
+               $this->db->bind(':isReviewed', false);  
+               $this->db->bind(':id', $id);  
+          
+
+               if ($this->db->execute()) {
+                    return true;
+               } else {
+                    return false;
+               }
+          }
+          
 
           
           public function editConclusions($data){

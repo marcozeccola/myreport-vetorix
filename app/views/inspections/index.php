@@ -1,9 +1,11 @@
+ 
 <?php
    require APPROOT . '/views/includes/head.php';
 ?>
 <?php
    require APPROOT . '/views/includes/navigation.php'; 
-   
+   $inspection = $data["inspection"];
+   $showEditCondition = (!$inspection->isReviewed);
 ?>
 
 <style>
@@ -52,8 +54,10 @@
                <div class="col-lg-4">
                     <div class="portfolio-info">
                          <p class="text-end">
+                              <?php if ($showEditCondition) { ?>
                               <a href="<?php echo URLROOT; ?>/inspections/editBasicInfo?id=<?php echo $_GET["id"]; ?>" >
                                    Edit <i class="bi bi-pen-fill"></i>
+                              <?php } ?>
                               </a>
                          </p> 
                          <h3>
@@ -79,9 +83,11 @@
 
                     <div class="portfolio-info" id="users">
                          <p class="text-end">
+                              <?php if ($showEditCondition) : ?>
                               <a href="<?php echo URLROOT; ?>/inspections/addUser?idInspection=<?php echo $_GET["id"]; ?>" >
                                    Add <i class="bi bi-plus"></i>
                               </a>
+                              <?php endif; ?>
                          </p> 
                          <h3>
                               Technicians
@@ -98,9 +104,11 @@
                          </ul>
 
                          <p class="text-end">
+                              <?php if ($showEditCondition) : ?>
                               <a href="<?php echo URLROOT; ?>/inspections/addReviewer?idInspection=<?php echo $_GET["id"]; ?>" >
                                    Edit <i class="bi bi-pencil"></i>
                               </a>
+                              <?php endif; ?>
                          </p> 
                          <h3>
                               Reviewer
@@ -114,15 +122,29 @@
                               <?php
                               }
                               ?>
+
+                              <?php if($data["inspection"]->fk_idReviewer == $_SESSION['user_id']){ ?>
+                              <li>
+                              <div class="form-check form-switch" style="margin-left: 30px!important;"> 
+                                   Check/uncheck as reviewed
+                                        <input class="form-check-input" type="checkbox" role="switch" 
+                                             <?php echo ($data["inspection"]->isReviewed == 1)? "checked" : "" ?> 
+                                             id="reviewerSwitch" name="reviewerSwitch"> 
+                              </div>
+                              </li>
+                              <?php } ?> 
+                              
                          </ul>
 
                     </div>
 
                     <div class="portfolio-info" id="ultrasounds">
-                         <p class="text-end">
+                         <p class="text-end"> 
+                              <?php if ($showEditCondition) : ?>
                               <a href="<?php echo URLROOT; ?>/ultrasoundInspections/addUltrasound?idInspection=<?php echo $_GET["id"]; ?>">
                                    Add <i class="bi bi-plus"></i>
                               </a>
+                              <?php endif; ?>
                          </p>
                          <h3>Ultrasounds</h3>
                          <ul>
@@ -132,9 +154,12 @@
                                         <strong>Sn:</strong> <?php echo $ultrasound->sn; ?><br>
                                         <strong>Expiration:</strong> <?php echo $ultrasound->expiration; ?><br>
                                         <strong>Probe:</strong> <?php echo $ultrasound->probe; ?><br>
+                                        
+                                        <?php if ($showEditCondition) : ?> 
                                         <a href="<?php echo URLROOT; ?>/ultrasoundInspections/editUltrasound?idUltrasound=<?php echo $ultrasound->idUltrasoundInspection; ?>">
                                              Edit Probe's informations 
                                         </a>
+                                        <?php endif; ?>
                                    </li>
                               <?php endforeach; ?>
                          </ul>
@@ -167,16 +192,20 @@
                                                   data-parent="#accordion">
                                                   <div class="card-body">
                                                        <p class="text-end">
+                                                            <?php if ($showEditCondition) : ?>
                                                             <a href="<?php echo URLROOT; ?>/inspectioncomponents/addInspectionComponent?idInspection=<?php echo $_GET["id"]; ?>" >
                                                                  <i class="bi bi-plus"></i> add
                                                             </a>
+                                                            <?php endif; ?>
                                                        </p> 
                                                        <div class="text-center" style="width: 100%;   ">   
                                                             <table class="table">
                                                                  <thead>
                                                                       <tr>
                                                                       <th scope="col">Component</th>
-                                                                      <th scope="col">Delete</th> 
+                                                                 <?php if ($showEditCondition) : ?>
+                                                                      <th scope="col">Delete</th>  
+                                                                 <?php endif; ?>
                                                                       </tr>
                                                                  </thead>
                                                                  <tbody>
@@ -190,11 +219,14 @@
                                                                                      <?php echo $component->componentIstance; ?>
                                                                                 </a>
                                                                            </th> 
+                                                                           
+                                                                 <?php if ($showEditCondition) : ?>
                                                                            <td>
                                                                                 <a href="<?php echo URLROOT; ?>/inspectioncomponents/deleteComponent?id=<?php echo $component->idInspectionComponent; ?>">
                                                                                      <i class="bi bi-trash-fill"></i>
                                                                                 </a>
                                                                            </td> 
+                                                                 <?php endif; ?>
                                                                       </tr> 
                                                                  <?php
                                                                            } 
@@ -237,6 +269,8 @@
                                                             ?>
                                                                  <tr>
                                                                       <th scope="row"><?php echo $component->componentIstance; ?></th>
+                                                                      
+                                                                 <?php if ($showEditCondition) { ?>
                                                                       <td>
                                                                            <a href="<?php echo URLROOT; ?>/inspectioncomponents/editNotes?idComponent=<?php echo $component->fk_idComponentIstance; ?>&idInspection=<?php echo $data["inspection"]->idInspection; ?>">     
                                                                            <?php
@@ -309,6 +343,63 @@
                                                                            ?> 
                                                                            </a>
                                                                       </td> 
+                                                                      
+                                                                 <?php }else{?>
+
+                                                                      <td>
+                                                                            <?php
+                                                                                if($component->notes!=NULL &&  isset($component->notes)){
+                                                                                      
+                                                                                     echo $component->notes ;
+                                                                                } 
+                                                                           ?>  
+                                                                      </td> 
+
+                                                                      <td> <?php
+                                                                                $cont = 0;
+                                                                                if($data["buildingTec"]){ 
+                                                                                     foreach($data["buildingTec"] as $buildingTec){
+                                                                                          if($component->fk_idComponentIstance == $buildingTec->idComponentIstance){ 
+                                                                                               if($cont >0){
+                                                                                                    echo ", ";
+                                                                                               }
+                                                                                               echo $buildingTec->technique . " ";  
+                                                                                               $cont ++;  
+                                                                                          }
+                                                                                          
+                                                                                     } 
+                                                                                } 
+                                                                           ?>
+                                                                           </a>
+                                                                      </td> 
+                                                                      <td> 
+                                                                           <?php
+                                                                                if($data["postCare"]){ 
+                                                                                     $cont = 0;
+                                                                                     foreach($data["postCare"] as $postCare){
+                                                                                          
+                                                                                          if($component->idComponentIstance == $postCare->idComponentIstance){ 
+                                                                                               if($cont >0){
+                                                                                                    echo ", ";
+                                                                                               }
+                                                                                               echo $postCare->postCare ;  
+                                                                                               $cont ++;  
+                                                                                          }
+                                                                                     }  
+                                                                                } 
+                                                                           ?>
+                                                                           </a>
+                                                                      </td> 
+                                                                      <td>
+                                                                             <?php
+                                                                                if($component->interferences!=NULL &&  isset($component->interferences)){
+                                                                                      
+                                                                                     echo $component->interferences ;
+                                                                                } 
+                                                                           ?>  
+                                                                      </td> 
+                                                                      
+                                                                 <?php } ?>
                                                                  </tr> 
                                                             <?php
                                                                       } 
@@ -333,10 +424,13 @@
                                              <div id="info" class="collapse show" aria-labelledby="headingThree"
                                                   data-parent="#accordion">
                                                   <div class="card-body"> 
-                                                       <b>Surface conditions 
+                                                       <b>Surface conditions
+                                                            
+                                                            <?php if ($showEditCondition) : ?> 
                                                             <a href="<?php echo URLROOT; ?>/surfaceconditions/edit?idInspection=<?php echo $_GET["id"]; ?>" >
                                                                  Edit <i class="bi bi-pen-fill"></i>
                                                             </a> 
+                                                            <?php endif; ?>
                                                        </b>
                                                        <br>
                                                        <?php 
@@ -352,9 +446,11 @@
                                                        <br>
                                                        <br>
                                                        <b>Structure position
+                                                            <?php if ($showEditCondition) : ?> 
                                                             <a href="<?php echo URLROOT; ?>/structurePositions/edit?idInspection=<?php echo $_GET["id"]; ?>" >
                                                                  Edit <i class="bi bi-pen-fill"></i>
                                                             </a> 
+                                                            <?php endif; ?>
                                                        </b>
                                                        <br>
                                                        <?php 
@@ -384,9 +480,11 @@
                                              <div id="procedures" class="collapse show" aria-labelledby="headingThree"
                                                   data-parent="#accordion">
                                                   <div class="card-body"> 
+                                                       <?php if ($showEditCondition) : ?> 
                                                        <a href="<?php echo URLROOT; ?>/inspections/editProcedures?idInspection=<?php echo $_GET["id"]; ?>" >
                                                             Edit <i class="bi bi-pen-fill"></i>
                                                        </a>
+                                                       <?php endif; ?>
                                                        <br>
                                                        <b>Specific procedure: </b> <?php echo $data["inspection"]->specificProcedure;?> 
                                                        <br> 
@@ -420,9 +518,11 @@
                                              <div id="calibration" class="collapse show" aria-labelledby="headingThree"
                                                   data-parent="#accordion">
                                                   <div class="card-body"> 
+                                                       <?php if ($showEditCondition) : ?> 
                                                        <a href="<?php echo URLROOT; ?>/inspections/editCalibrations?idInspection=<?php echo $_GET["id"]; ?>" >
                                                             Edit <i class="bi bi-pen-fill"></i>
                                                        </a> 
+                                                       <?php endif; ?>
                                                        <br>
                                                        <b>Calibrations: </b> 
                                                        <?php 
@@ -455,9 +555,11 @@
                                              <div id="conclusions" class="collapse show" aria-labelledby="headingThree"
                                                   data-parent="#accordion">
                                                   <div class="card-body"> 
+                                                       <?php if ($showEditCondition) : ?> 
                                                        <a href="<?php echo URLROOT; ?>/inspections/editConclusions?idInspection=<?php echo $_GET["id"]; ?>" >
                                                             Edit <i class="bi bi-pen-fill"></i>
                                                        </a> 
+                                                       <?php endif; ?>
                                                        <br>
                                                        <b>Conclusions: </b> 
                                                        <?php 
@@ -482,10 +584,17 @@
 
      </div>
 </section>
-
+ 
 <script>
-
-</script>
+     document.addEventListener('DOMContentLoaded', function() {
+          const reviewerSwitch = document.getElementById('reviewerSwitch');
+          if (reviewerSwitch) {
+               reviewerSwitch.addEventListener('change', function() {
+                    window.location.href = "<?php echo URLROOT; ?>/inspections/changeReviewStatus?idInspection=<?php echo $_GET['id']; ?>";
+               });
+          }
+     });
+</script> 
 <?php
    require APPROOT . '/views/includes/footer.php'; 
 ?>

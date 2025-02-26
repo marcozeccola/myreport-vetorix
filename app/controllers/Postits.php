@@ -10,6 +10,7 @@ class Postits extends Controller {
      var $inspectionsModel;
      var $inspectionComponentsModel;
      var $postItModel;
+     var $uninspectiblesModel;
 
      public function __construct() { 
 
@@ -27,6 +28,7 @@ class Postits extends Controller {
           $this->inspectionComponentsModel = $this->model('InspectionComponent');
           $this->foldersModel = $this->model('Folder'); 
           $this->postItModel = $this->model('Postit');  
+          $this->uninspectiblesModel = $this->model('Uninspectible');  
      }
 
  
@@ -86,6 +88,7 @@ class Postits extends Controller {
                ];
                
                $postIts = $this->postItModel->getPostitsByImageNameAndIdComponent($data);
+               $uninspectibles = $this->uninspectiblesModel->getUninspectibleByImageNameAndIdComponent($data);
 
                // Insert note into database
                $data = [
@@ -94,7 +97,8 @@ class Postits extends Controller {
                     'modelIstance'=>$modelIstance,
                     'model'=>$model,
                     'tree'=>$this->foldersModel->getAllFolderTree($model->fk_idFolder), 
-                    'postits'=>$postIts
+                    'postits'=>$postIts,
+                    'uninspectibles'=>$uninspectibles
                ];
                 
 
@@ -106,48 +110,26 @@ class Postits extends Controller {
           }
      }
 
-
-
-     public function changeFolderName(){ 
-
-          if($_SERVER['REQUEST_METHOD'] == 'POST'){
-
-               $data =[ 
-                    'id'=>$_POST["idFolder"],
-                    'folder'=>$_POST["folder"]
-               ];
-
-               $this->foldersModel->editFolder($data); 
-             
-               header('location: ' . URLROOT . "/folders/index?idFolder=".$data["id"]);
-              
-          }else{  
-
-               if(isset($_GET["idFolder"])){ 
-                    $data =[
-                        'idFolder'=>$_GET["idFolder"],  
-                        'folder'=>$this->foldersModel->getFolderById($_GET["idFolder"])
-                    ];
+     
+     public function deletePostIt() {
+          if ($_SERVER['REQUEST_METHOD'] == 'POST' 
+                    && isset($_GET["idPostit"])
+                    && isset($_GET["idInspection"]))   {
                     
-                    $this->view('folders/editFolder', $data);
-               }else{
-                    header('location: ' . URLROOT. "/folders");
+               $postIt = $this->postItModel->getPostitById($_GET["idPostit"]);
+               $idComponent = $postIt->fk_idComponentIstance; 
+               $imageName = $postIt->imageName;
+
+               if ($this->postItModel->delete($_GET["idPostit"])) {
+                    header('location: ' . URLROOT. "/postits/singleImage?idInspection=".$_GET["idInspection"]."&imageName=".$imageName."&idComponent=".$idComponent);
+               } else {
+                    die("Something went wrong");
                }
-               
+          } else {
+
+               header('location: ' . URLROOT. "/folders");
           }
      }
+
  
-     public function deleteFolder(){
-          if(isset($_GET["idFolder"]) 
-               && !($this->modelsModel->getModelsByIdFolder($_GET["idFolder"]))->scalar
-               && !$this->foldersModel->getFoldersByParentId($_GET["idFolder"]) ){  
-               $fkFolder = $this->foldersModel->getFolderById($_GET["idFolder"])->fk_idFolder;
-               $this->foldersModel->deleteFolderById($_GET["idFolder"]);
-               header('location: ' . URLROOT . "/folders/index?idFolder=".$fkFolder); 
-          }elseif(isset($_GET["idFolder"]) ){
-                header('location: ' . URLROOT . "/folders/index?idFolder=".$_GET["idFolder"]."&error=1");  
-          }else{
-               header('location: ' . URLROOT . "/folders/");  
-          }
-     }
 }

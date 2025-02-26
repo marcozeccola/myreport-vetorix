@@ -710,6 +710,7 @@ $signaturesTable .= ' </td> </tr>
 </table> ';
  
 $pdf->html($signaturesTable ); 
+ 
 // reset pointer to the last page
 $pdf->lastPage();  
  

@@ -5,17 +5,17 @@ class User {
         $this->db = new Database;
     }
 
-    public function register($data) {
-        $this->db->query('INSERT INTO users (name, surname ,email, password,qualifications, isActive  role)
-                             VALUES(:name, :surname , :email, :password ,:qualifications, :isActive, :role)');
+    public function register($data) { 
+        $this->db->query('INSERT INTO users (name, surname ,email, password,qualifications, isActive,  role)
+                             VALUES (:name, :surname , :email, :password ,:qualifications, :isActive, :role)');
  
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':surname', $data['surname']);
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':password', $data['password']); 
         $this->db->bind(':qualifications', $data['qualifications']); 
+        $this->db->bind(':isActive', 1);
         $this->db->bind(':role', $data['role']);
-        $this->db->bind(':isActive', true);
  
         if ($this->db->execute()) {
             return $this->db->lastinsertid();

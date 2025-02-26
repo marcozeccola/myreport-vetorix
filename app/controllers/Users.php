@@ -100,7 +100,7 @@ class Users extends Controller {
 
                 // Hash della password
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
+ 
                 if ($idUtenteRegistrato = $this->userModel->register($data)) {
                     
                     /*se utente restricted gli vengono aggiunti tutti i permessi in automatico
@@ -119,7 +119,7 @@ class Users extends Controller {
                     }*/
 
                     //Redirect alla dashboard specialisti
-                    header('location: ' . URLROOT . '/users/permissionsDashboard?userId='. $idUtenteRegistrato);
+                    header('location: ' . URLROOT . '/users/usersDashboard');
                 } else {
                     die('Qualcosa è andato storto.');
                 }

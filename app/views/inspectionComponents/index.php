@@ -54,17 +54,19 @@
             ?>
         <br><br>
         <div class="text-center">
-          <table class=" text-center"> 
+          <table class=" text-center" style="margin: auto;"> 
              <?php 
                 $cont =0;
                 foreach($files as $file){
              ?>        <tr>
                          <td> 
                               <img src="<?php echo URLROOT ;?>/utilities/getPrivateFile?type=compInspec&file=<?php echo $file ;?>&id=<?php echo $component->idComponentIstance ;?>"
-                                       style="width: 200px;">
+                                       style="width: 500px;">
 
                               <a href="<?php echo URLROOT ;?>/postits/singleImage?idInspection=<?php echo $_GET["idInspection"];  ?>&imageName=<?php echo $file ;?>&idComponent=<?php echo $component->idComponentIstance ;?>" 
-                              class="btn btn-primary" >Open</a>
+                              class="btn btn-primary" >Open</a> 
+                              <a href="<?php echo URLROOT ;?>/pdf/test?imageName=<?php echo $file ;?>&idComponentIstance=<?php echo $component->idComponentIstance ;?>" 
+                              class="btn btn-primary" >Open</a> 
                          </td> 
                     </tr>  
           <?php 

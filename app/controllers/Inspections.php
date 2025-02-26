@@ -86,6 +86,32 @@ class Inspections extends Controller {
   
           $this->view('inspections/index', $data);
      }
+
+     
+     public function changeReviewStatus(){
+
+          if(!isset($_GET["idInspection"])){ 
+               header("location:".URLROOT."/folders");
+          } 
+
+          $idInspection = $_GET["idInspection"];
+          $inspection =$this->inspectionsModel->getInspectionById($_GET["idInspection"]);
+
+          if( ($inspection->fk_idReviewer == null) || ($inspection->fk_idReviewer != $_SESSION['user_id']) ){
+               header("location:".URLROOT."/folders");
+          }      
+
+          $reviewer = $this->usersModel->getUserById($inspection->fk_idReviewer);
+
+          if($inspection->isReviewed == 0){ 
+               $this->inspectionsModel->reviewInspection($_GET["idInspection"]);
+               echo "rev";
+          }else{
+               $this->inspectionsModel->unreviewInspection($_GET["idInspection"]);
+          }
+  
+          header('location: ' . URLROOT . "/inspections?id=$idInspection#users");
+     }
  
      public function addBasicInfo(){
            $data=[];

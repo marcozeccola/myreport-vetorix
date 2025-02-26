@@ -22,6 +22,8 @@ class Pdf extends Controller {
      var $probeDimensionsModel;
      var $probeFrequencyModel;
      var $probeDetailsModel;
+     var $postItModel;
+     var $uninspectiblesModel;
      
     public function __construct() { 
 
@@ -46,6 +48,8 @@ class Pdf extends Controller {
           $this->probeDimensionsModel = $this->model('ProbeDimension');  
           $this->probeFrequencyModel = $this->model('ProbeFrequency');  
           $this->probeDetailsModel = $this->model('ProbeDetail');  
+          $this->postItModel = $this->model('Postit');  
+          $this->uninspectiblesModel = $this->model('Uninspectible');  
 
          if(!isLoggedIn()){  
             header("location:".URLROOT."/users/login");
@@ -59,7 +63,59 @@ class Pdf extends Controller {
                $this->view('pdfs/index', $data);
     }
 
-    public function report()  { 
+     public function test(){ 
+          
+          if(isset($_GET["imageName"])
+               && isset($_GET["idComponentIstance"])){ 
+              
+               $data = [
+                    'imageName' => $_GET["imageName"],
+                    'idComponentIstance'=>$_GET["idComponentIstance"]
+               ];
+               
+               $postIts = $this->postItModel->getPostitsByImageNameAndIdComponent($data);
+               $uninspectibles = $this->uninspectiblesModel->getUninspectibleByImageNameAndIdComponent($data);
+
+               $data = [
+                    'imageName' => $_GET["imageName"],
+                    'idComponentIstance'=>$_GET["idComponentIstance"],
+                    'postIts'=>$postIts,
+                    'uninspectibles'=>$uninspectibles
+               ]; 
+               
+               $imgUrl =   APPROOT. "/private/compInspec/". $_GET["idComponentIstance"]."/".$data["imageName"];
+ 
+               // Load the base image
+               $base_image = imagecreatefrompng($imgUrl);
+
+               // Create a new image that is the same size as the base image
+               $new_image = imagecreatetruecolor(imagesx($base_image), imagesy($base_image));
+               
+               // Loop through the post-it data and render each note on the new image
+               foreach ($postIts as $postit) {
+                    $x = $postit->x;
+                    $y = $postit->y;
+                    $note = $postit->note;
+                    var_dump($note);
+                    // Render the note text on the new image
+                    $font = dirname(__FILE__) . '/arial.ttf';
+                    $fontsize = 18;
+                    $color = imagecolorallocate($new_image, 0, 0, 0);
+                    imagettftext($new_image, $fontsize, 0, $x, $y, $color, $font, $note);
+               }
+
+                    // Composite the new image with the base image
+                    imagecopy($new_image, $base_image, 0, 0, 0, 0, imagesx($base_image), imagesy($base_image));
+
+                    // Save the resulting image to a file
+                    imagepng($new_image, APPROOT.'/../public/assets/test.png');
+ 
+          }else{ 
+               header("location:".URLROOT."/folders");
+          } 
+     }
+
+     public function report()  { 
           $inspection =$this->inspectionsModel->getInspectionById($_GET["idInspection"]);     
           $modelIstance = $this->modelIstancesModel->getModelIstanceById($inspection->fk_idModelIstance);
           $model = $this->modelsModel->getModelById($modelIstance->fk_idModel);
@@ -104,7 +160,6 @@ class Pdf extends Controller {
           }else{ 
                header("location:".URLROOT."/folders");
           } 
-    }
- 
+     } 
  
 }
